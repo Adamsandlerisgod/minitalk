@@ -6,7 +6,7 @@
 /*   By: whendrik <whendrik@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/08 15:45:34 by whendrik          #+#    #+#             */
-/*   Updated: 2023/08/14 18:13:01 by whendrik         ###   ########.fr       */
+/*   Updated: 2023/08/14 20:40:42 by whendrik         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
-
-// pid_t client_pid = 0;
 
 int		ft_atoi(const char *str);
 int		ft_strlen(const char *s);

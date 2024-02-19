@@ -6,69 +6,57 @@
 #    By: whendrik <whendrik@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/05/30 16:08:21 by whendrik          #+#    #+#              #
-#    Updated: 2023/08/05 12:58:40 by whendrik         ###   ########.fr        #
+#    Updated: 2023/08/14 20:36:32 by whendrik         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 #FLAGS
 CC = gcc
-C_FLAGS = -Wall -Wextra -Werror -g -o3
-# S_FLAGS = -g -fsanitize=address,undefined
-
-#commands
-RM = rm -rf
-AR = ar rc
+C_FLAGS = -Wall -Wextra -Werror -g
 
 #Targlib name and dirs
-NAME = push_swap
-LIBFT = libft/libft.a
-SRC_DIR =src
-SRC_FILES= main.c 
+NAME = minitalk
+SERVER = server
+CLIENT = client
 
-OBJ_DIR = obj
-INC_DIR = includes
-LIBFT_DIR = libft
-INCS = -I$(INC_DIR) -I$(LIBFT_DIR)
+SVR_SRCS = server.c
+CLT_SRCS = client.c
+UTILS = utils.c
 
-# Sources, objects and dependencies
-SOURCES = $(addprefix $(SRC_DIR)/, $(SRC_FILES))
-OBJECTS = $(SOURCES:$(SRC_DIR)%.c=$(OBJ_DIR)/%.o)
+B_SERVER = server_bonus
+B_CLIENT = client_bonus
+B_SVR_SRCS = server_bonus.c
+B_CLT_SRCS = client_bonus.c
 
-# Default target, build the library
-all: $(LIBFT_DIR) $(NAME)
+$(NAME): $(SERVER) $(CLIENT) $(B_CLIENT $(B_SERVER))
 
-# Rule to build each personal library
-$(LIBFT):
-	make -C $(LIBFT_DIR)
+all: $(NAME)
 
-# Object file build rule
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
-	mkdir -p $(dir $@)
-	$(CC) $(C_FLAGS) -c $< -o $@
+$(SERVER):
+	$(CC) $(C_FLAGS) $(UTILS) $(SVR_SRCS) -o $(SERVER)
 
+$(CLIENT):
+	$(CC) $(C_FLAGS) $(UTILS) $(CLT_SRCS) -o $(CLIENT)
 
-$(NAME): $(OBJECTS) $(LIBFT)
-	$(CC) $(C_FLAGS) $^ $(INCS) -o $(NAME)
+bonus: 
+	$(CC) $(C_FLAGS) $(UTILS) $(B_SVR_SRCS) -o $(B_SERVER)
+	$(CC) $(C_FLAGS) $(UTILS) $(B_CLT_SRCS) -o $(B_CLIENT)
 
-# Clean object files
+# Clean object files and executables
 clean:
-	$(RM) $(OBJ_DIR)
-	make clean -C $(LIBFT_DIR)
+	$(RM) $(SERVER) $(CLIENT)
 
-# Clean object files and target library
-fclean: clean
-	$(RM) $(NAME)
-	$(RM) $(LIBFT_DIR)/libft.a
-	make fclean -C $(LIBFT_DIR) 
+fclean: clean 
+	$(RM) $(B_SERVER) $(B_CLIENT)
 
 re: fclean all
 
+rebonus: fclean bonus
+
 # Check code style
 norm:
-	@norminette -R CheckForbiddenSourceHeader $(SRC_DIR)/*.c ;
-	@norminette -R CheckDefine $(INC_DIR)/*.h ;
-	@norminette -R CheckForbiddenSourceHeader $(LIBFT_DIR)/src/*.c ;
-	@norminette -R CheckDefine $(LIBFT_DIR)/includes/*.h
+	@norminette -R CheckForbiddenSourceHeader $(FILES);
+	@norminette -R CheckDefine $(FILES);
 
 # Phony targets
-.PHONY: clean all fclean re norm
+.PHONY: clean all fclean re norm bonus rebonus
